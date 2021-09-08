@@ -39,10 +39,6 @@ class AbstractContract(ABC):
         
     def get_functions_list(self) -> list:
         return self.contract.all_functions()
-
-    def get_balance_of(self, wallet, mode='ether'):
-        wei = self.contract.caller.balanceOf(wallet)
-        return self.fromWei(wei, mode)
     
 class BSCContract(AbstractContract):
     provider = BSC
@@ -53,6 +49,11 @@ class BEP20Token(BSCContract):
             abi = json.load(fp)
         super(BEP20Token, self).__init__(address, ABI=abi)
 
+    def get_decimals(self):
+        decimals = self.contract.caller.decimals()
+        return decimals
+
     def get_balance_of(self, wallet, mode='ether'):
         wei = self.contract.caller.balanceOf(wallet)
-        return self.fromWei(wei, mode)
+        decimals = self.get_decimals()
+        return wei / 10 ** decimals

@@ -2,9 +2,6 @@ import argparse as argpr
 
 from contract import BEP20Token
 
-
-
-
 #парсинг 
 prs = argpr.ArgumentParser()
 prs.add_argument('--wallet', dest='wallet', required=True)
