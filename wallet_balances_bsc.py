@@ -1,12 +1,8 @@
 import argparse as argpr
-import json
 
-from contract import BSCContract
+from contract import BEP20Token
 
 
-# загрузка abi
-with open('./custom_abi.json') as fp:
-    abi = json.load(fp)
 
 
 #парсинг 
@@ -16,7 +12,7 @@ prs.add_argument('--token', dest='contract', required=True)
 
 args = prs.parse_args()
 
-cntrct = BSCContract(address=args.contract, ABI=abi) 
+cntrct = BEP20Token(address=args.contract) 
 
 eth_mount = cntrct.get_balance_of(args.wallet)
 

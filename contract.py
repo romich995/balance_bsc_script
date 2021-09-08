@@ -3,6 +3,8 @@
 # Address and ABI can be found on blockchain explorer sush as https://etherscan.io
 
 from abc import ABC
+import json
+
 from web3 import Web3
 
 
@@ -14,7 +16,7 @@ class AbstractContract(ABC):
     
     provider = None
     
-    def __init__(self, address: str, ABI: str):
+    def __init__(self, address: str, ABI):
         
         if self.provider is not None:
             w3 = Web3(Web3.HTTPProvider(self.provider))
@@ -44,6 +46,13 @@ class AbstractContract(ABC):
     
 class BSCContract(AbstractContract):
     provider = BSC
-    
-    
 
+class BEP20Token(BSCContract):
+    def __init__(self, address: str, abi_json_fp: str ='./custom_abi_BEP20.json'):
+        with open(abi_json_fp) as fp:
+            abi = json.load(fp)
+        super(BEP20Token, self).__init__(address, ABI=abi)
+
+    def get_balance_of(self, wallet, mode='ether'):
+        wei = self.contract.caller.balanceOf(wallet)
+        return self.fromWei(wei, mode)
